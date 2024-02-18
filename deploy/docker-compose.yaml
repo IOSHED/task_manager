@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    deploy:
+      replicas: 1
+    depends_on:
+      - telegram_bot
+    networks:
+      - taskmanager-net
+
+  telegram_bot:
+    build: ../telegram_bot/docker
+    container_name: telegram_bot
+    deploy:
+      replicas: 1
+    networks:
+      - taskmanager-net
+
+  frontend:
+    build: ../web_application/frontend/docker
+    deploy:
+      replicas: 1
+    networks:
+      - taskmanager-net
+
+networks:
+  taskmanager-net:
+    driver: overlay

@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  telegram_bot:
+    build: ../docker
+    container_name: telegram_bot
+    ports:
+      - "8001:8000"
+    restart: always
+    depends_on:
+      - postgres_telegram_bot
+    env_file:
+      - ../.env
+    volumes:
+      - ./auth-service/:/app/
+
+  postgres_telegram_bot:
+    image: postgres:12.1-alpine
+    container_name: postgres_telegram_bot
+    restart: always
+    volumes:
+      - postgres_telegram_bot:/var/lib/postgresql/data/
+    env_file:
+      - ../.env
+
+volumes:
+  postgres_telegram_bot:
