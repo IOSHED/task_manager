@@ -1,3 +1,5 @@
+use task_service::infra::config::get_configuration;
+
 fn main() {
-    println!("Hello, world!");
+    let _config = get_configuration();
 }

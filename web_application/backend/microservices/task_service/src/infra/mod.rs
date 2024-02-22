@@ -12,5 +12,5 @@
 /// The infra layer typically depends on the domain layer to access and manipulate domain entities.
 ///
 
-mod db;
-mod config;
+pub mod db;
+pub mod config;
