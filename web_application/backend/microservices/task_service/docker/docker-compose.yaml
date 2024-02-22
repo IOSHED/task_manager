@@ -1,3 +1,30 @@
 version: '3.7'
 
 services:
+  postgres_task:
+    container_name: "postgres_task"
+    image: postgres:12.1-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    restart: always
+    volumes:
+      - postgres_db_volume:/var/lib/postgresql/data/
+
+  task_service:
+    container_name: "task_service"
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    ports:
+      - "8003:8003"
+    depends_on:
+      - postgres_task
+
+volumes:
+  postgres_db_volume:
+
