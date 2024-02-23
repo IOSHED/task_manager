@@ -12,5 +12,5 @@
 /// Interfaces depend on the perform business operations.
 ///
 
-mod cli;
-mod http;
+pub mod cli;
+pub mod http;
