@@ -2,7 +2,7 @@ use std::net::TcpListener;
 use actix_web::dev::Server;
 use crate::infra::config::Settings;
 use crate::infra::db;
-use crate::infra::startup::start::run;
+use crate::usecase::startup::start::run;
 
 
 pub struct Application {

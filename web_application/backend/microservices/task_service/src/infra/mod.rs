@@ -15,4 +15,3 @@
 pub mod db;
 pub mod config;
 pub mod logger;
-pub mod startup;

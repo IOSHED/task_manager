@@ -1,6 +1,6 @@
 use task_service::infra::config::get_configuration;
 use task_service::infra::logger::{get_logger, init_logger};
-use task_service::infra::startup::Application;
+use task_service::usecase::startup::Application;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
