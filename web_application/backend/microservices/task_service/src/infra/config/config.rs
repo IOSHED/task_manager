@@ -4,14 +4,13 @@ use crate::infra::config::structs::Settings;
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let mut settings = config::Config::default();
 
-    let base_path = std::env::current_dir().expect("Failed to getting current dir for settings");
-    let config_dir = base_path.join("configuration");
-
+    let base_path = std::env::current_dir()
+        .expect("Failed to getting current dir for settings");
+    let config_dir = base_path.join("config");
 
     // Add configuration values from a file named `configuration`.
     // It will look for any top-level file with an extension
     // that `config` knows how to parse: yaml, json, etc.
-
     // Read `default` config file.
     settings.merge(config::File::from(config_dir.join("base")).required(true))?;
 
