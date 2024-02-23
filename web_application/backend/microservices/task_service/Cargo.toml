@@ -20,7 +20,7 @@ actix-web = "4.4.1"
 actix-http = "3.0.4"
 
 # work with futures
-tokio = "1.35.1"
+tokio = { version = "1.35.1", features = ["rt", "rt-multi-thread", "macros"] }
 
 # serializer, desirializercargo run
 serde = { version = "1.0.196", features = ["derive"] }

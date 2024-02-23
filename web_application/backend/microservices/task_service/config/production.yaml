@@ -1,5 +1,5 @@
 application:
   host: 0.0.0.0
 database:
-  host: "postgres_db"
+  host: "postgres_task"
   require_ssl: false
