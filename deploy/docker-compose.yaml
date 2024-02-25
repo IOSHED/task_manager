@@ -3,5 +3,5 @@ version: '3.7'
 include:
   - ../web_application/backend/microservices/auth_service/docker/docker-compose.yaml
   - ../web_application/backend/microservices/task_service/docker/docker-compose.yaml
-  - ../nginx/docker/docker-compose.yaml
+  - ../web_application/backend/nginx/docker/docker-compose.yaml
 
