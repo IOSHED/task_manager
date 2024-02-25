@@ -1,8 +1,0 @@
-application:
-  port: 8003
-
-database:
-  port: 5432
-  username: "rust_iosh"
-  password: "44541"
-  database_name: "task"
