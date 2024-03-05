@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 
-from sqlalchemy import Integer
+from sqlalchemy import Integer, String, DateTime, Boolean, Time
 from sqlalchemy.orm import mapped_column, Mapped
 
 from app.db.db import Base
@@ -32,17 +32,17 @@ class Task(Base):
     """
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str]
-    description: Mapped[str]
-    create_by: Mapped[int]
+    name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String(255))
+    create_by: Mapped[int] = mapped_column(Integer)
 
-    id_template: Mapped[Optional[int]]
-    is_complete: Mapped[Optional[bool]]
-    complete_at: Mapped[Optional[datetime.datetime]]
-    planned_complete_at: Mapped[Optional[datetime.datetime]]
-    created_at: Mapped[Optional[datetime.datetime]]
-    send_notification_at: Mapped[Optional[datetime.datetime]]
-    duration_repeat_send_notification_at: Mapped[Optional[datetime.time]]
+    id_template: Mapped[Optional[int]] = mapped_column(Integer)
+    is_complete: Mapped[Optional[bool]] = mapped_column(Boolean)
+    complete_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+    planned_complete_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+    created_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+    send_notification_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+    duration_repeat_send_notification_at: Mapped[Optional[datetime.time]] = mapped_column(Time)
 
     def __repr__(self) -> str:
         return f"Task(id={self.id!r}, name={self.name!r})"

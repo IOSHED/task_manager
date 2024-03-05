@@ -20,8 +20,8 @@ services:
     container_name: postgres_task
     restart: always
     volumes:
-      - postgres_data_task:/var/lib/postgresql/data/
-      - ../.db_data:/var/lib/postgresql/data/
+    - postgres_data_task:/var/lib/postgresql/data/
+    - ../.db_data:/var/lib/postgresql/
     env_file:
       - ../.env
 

@@ -1,12 +1,11 @@
 import datetime
 from typing import Optional
 
-from pydantic import BaseModel
-from pydantic.v1 import validator, constr, PositiveInt
+from pydantic import BaseModel, constr, PositiveInt, field_validator
 
 
 class TaskBase(BaseModel):
-    name: constr(min_length=1, max_length=64)
+    name: constr(min_length=1, max_length=255)
     description: constr(min_length=0, max_length=255)
     create_by: PositiveInt
     is_complete: Optional[bool]
@@ -16,14 +15,16 @@ class TaskBase(BaseModel):
     send_notification_at: Optional[datetime.datetime]
     duration_repeat_send_notification_at: Optional[datetime.time]
 
-    @validator('complete_at', 'planned_complete_at', 'send_notification_at')
-    def validate_completing(self, v):
-        if v < self.created_at:
+    @classmethod
+    @field_validator('complete_at', 'planned_complete_at', 'send_notification_at')
+    def validate_completing(cls, v: datetime.datetime) -> datetime.datetime:
+        if v < cls.created_at:
             raise ValueError('Datetime must be in the past')
         return v
 
-    @validator('created_at')
-    def validate_creating(self, v):
+    @classmethod
+    @field_validator('created_at')
+    def validate_creating(cls, v: datetime.datetime) -> datetime.datetime:
         if v > datetime.datetime.now():
             raise ValueError('Datetime must be in the future')
         return v
