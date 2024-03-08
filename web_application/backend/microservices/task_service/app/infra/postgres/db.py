@@ -2,14 +2,18 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-from app.config import DATABASE_URL
+from app import config
 
 
 class Base(DeclarativeBase):
     pass
 
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(config.DATABASE_URL, echo=True)
+
+if config.MODE == "DEBUG":
+    engine.echo = True
+
 async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 

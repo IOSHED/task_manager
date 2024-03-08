@@ -5,10 +5,18 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.db.db import Base
-from app.task.model import Task
-
 from app.config import POSTGRES_HOST, POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_PORT
+from app.infra.postgres.db import Base
+from app.infra.postgres.models.task import Task
+from app.infra.postgres.models.complete_task import CompleteTask
+from app.infra.postgres.models.notification_task import NotificationTask
+
+# my models
+_models = [
+    Task,
+    CompleteTask,
+    NotificationTask,
+]
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,7 +34,7 @@ config.set_section_option(section, "POSTGRES_PASSWORD", POSTGRES_PASSWORD)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
+# add your models's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata

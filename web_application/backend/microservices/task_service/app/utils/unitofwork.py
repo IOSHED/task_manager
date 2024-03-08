@@ -1,12 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
-from app.db.db import async_session_maker
+from app.infra.postgres.db import async_session_maker
+from app.domain.repository.task import TaskRepository
+from app.domain.repository.complete_task import CompleteTaskRepository
+from app.domain.repository.notification_task import NotificationTaskRepository
 
 
 class IUnitOfWork(ABC):
     # Set tree repositories
     task: Type[TaskRepository]
+    complete_task: Type[CompleteTaskRepository]
+    notification_task: Type[NotificationTaskRepository]
 
     @abstractmethod
     def __init__(self):
@@ -38,6 +43,8 @@ class UnitOfWork:
 
         # Set tree repositories
         self.task = TaskRepository(self.session)
+        self.complete_task = CompleteTaskRepository(self.session)
+        self.notification_task = NotificationTaskRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

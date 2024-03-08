@@ -2,11 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app import config
-from app.task.urls import router as router_task
-from app.db.db import Base
-
-# Import for alembic migrations
-_Base = Base
+from app.intrerface.http.url import router as router_task
 
 # Init app
 app = FastAPI(
