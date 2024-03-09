@@ -2,7 +2,7 @@
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
 from app.domain.shemas.response.task_create import ResponseTaskSchemaCreate
 
-from app.usecase.convector.data_for_task import get_data_for_task
+from app.domain.convector.data_for_task import get_data_for_task
 from app.usecase.uow.dependencies import UOWDep
 from app.usecase.service.notification_task import NotificationTaskService
 from app.usecase.service.complete_task import CompleteTaskService

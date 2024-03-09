@@ -1,7 +1,7 @@
 from app.infra.postgres.db import async_session_maker
-from app.domain.repository.task import TaskRepository
-from app.domain.repository.complete_task import CompleteTaskRepository
-from app.domain.repository.notification_task import NotificationTaskRepository
+from app.infra.postgres.repository.task import TaskRepository
+from app.infra.postgres.repository.complete_task import CompleteTaskRepository
+from app.infra.postgres.repository.notification_task import NotificationTaskRepository
 
 
 class UnitOfWork:

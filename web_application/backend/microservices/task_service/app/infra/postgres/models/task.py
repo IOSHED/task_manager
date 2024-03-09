@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.domain.shemas.models.task import TaskSchema
 from app.infra.postgres import db
 from app.usecase.interfaces.to_read_model import IToReadModel
-from usecase.annotated_types.model import IntPk, DatetimeTimeZone, str_sized
+from app.domain.annotated_types.model import IntPk, DatetimeTimeZone, str_sized
 
 
 class Task(db.Base, IToReadModel):

@@ -1,5 +1,5 @@
 from app.infra.postgres.models.complete_task import CompleteTask
-from usecase.repository import SQLAlchemyRepository
+from app.infra.postgres.orm_repository import SQLAlchemyRepository
 
 
 class CompleteTaskRepository(SQLAlchemyRepository):

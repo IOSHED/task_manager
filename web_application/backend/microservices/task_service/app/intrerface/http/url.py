@@ -40,7 +40,7 @@ async def add_task(
 
     Raises:
     - HTTPException 400: If there is a bad request or validation error.
-    - HTTPException 401: If current user is not active or nor registered
+    - HTTPException 401: If current user is not active or not registered.
     - HTTPException 404: If the task could not be created.
     - HTTPException 500: If there is an internal server error.
 
@@ -48,10 +48,8 @@ async def add_task(
     python
         # Example usage to add a new task
         new_task_data = {
-            "title": "Complete project report",
-            "description": "Finish the project report by Friday.",
-            "due_date": "2022-12-31",
-            "priority": "High"
+            "name": "Complete project report",
+            "description": "Finish the project report by Friday."
         }
         response = client.post("/tasks/", json=new_task_data)
         assert response.status_code == 201
@@ -64,12 +62,8 @@ async def add_task(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not created")
         return created_task_response
 
-    # except TaskCreationError as err:
-    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))
-
     except DatabaseError:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database Error")
 
-    except Exception as err:
-        print(f"ERROR>>>{err}")
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")

@@ -1,5 +1,5 @@
 from app.infra.postgres.models.notification_task import NotificationTask
-from usecase.repository import SQLAlchemyRepository
+from app.infra.postgres.orm_repository import SQLAlchemyRepository
 
 
 class NotificationTaskRepository(SQLAlchemyRepository):

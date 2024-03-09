@@ -1,9 +1,10 @@
 from typing import Optional
 
+from app.usecase.uow.dependencies import UOWDep
+
 from app.domain.shemas.models.notification_task import NotificationTaskSchema
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
-from app.usecase.convector.data_for_notification_task import get_data_for_notification_task
-from app.usecase.uow.dependencies import UOWDep
+from app.domain.convector.data_for_notification_task import get_data_for_notification_task
 
 
 class NotificationTaskService:

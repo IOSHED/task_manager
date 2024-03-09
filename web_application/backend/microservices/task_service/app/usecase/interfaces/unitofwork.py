@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
-from app.domain.repository.complete_task import CompleteTaskRepository
-from app.domain.repository.notification_task import NotificationTaskRepository
-from app.domain.repository.task import TaskRepository
+from app.infra.postgres.repository.complete_task import CompleteTaskRepository
+from app.infra.postgres.repository.notification_task import NotificationTaskRepository
+from app.infra.postgres.repository.task import TaskRepository
 
 
 class IUnitOfWork(ABC):

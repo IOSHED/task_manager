@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.domain.shemas.models.complete_task import CompleteTaskSchema
 from app.infra.postgres import db
 from app.usecase.interfaces.to_read_model import IToReadModel
-from usecase.annotated_types.model import IntPk, DatetimeTimeZone, foreign_key_delete_cascade
+from app.domain.annotated_types.model import IntPk, DatetimeTimeZone, foreign_key_delete_cascade
 
 
 class CompleteTask(db.Base, IToReadModel):

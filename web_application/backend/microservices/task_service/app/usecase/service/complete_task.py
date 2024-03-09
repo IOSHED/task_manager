@@ -3,7 +3,7 @@ from typing import Optional
 from app.domain.shemas.models.complete_task import CompleteTaskSchema
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.uow.dependencies import UOWDep
-from app.usecase.convector.data_for_complete_task import get_data_for_complete_task
+from app.domain.convector.data_for_complete_task import get_data_for_complete_task
 
 
 class CompleteTaskService:
