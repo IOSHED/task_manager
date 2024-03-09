@@ -1,0 +1,15 @@
+.idea
+.gitignore
+task.txt
+/deploy/.env
+/telegram_bot/.env
+
+/web_application/backend/microservices/auth_service/.db_data/
+/web_application/backend/microservices/auth_service/.pytest_cache/
+/web_application/backend/microservices/auth_service/.env
+
+/web_application/backend/microservices/task_service/.db_data/
+/web_application/backend/microservices/task_service/.pytest_cache/
+/web_application/backend/microservices/task_service/.env
+
+/web_application/backend/nginx/.env
