@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.shemas.models.task import TaskSchema
 from app.infra.postgres import db
 from app.usecase.interfaces.to_read_model import IToReadModel
+from usecase.annotated_types.model import IntPk, DatetimeTimeZone, str_sized
 
 
 class Task(db.Base, IToReadModel):
@@ -22,13 +22,13 @@ class Task(db.Base, IToReadModel):
     """
     __tablename__ = "task"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[IntPk]
     create_by: Mapped[int]
-    id_template: Mapped[Optional[int]] = mapped_column(default=None)
+    name: Mapped[str_sized(255)]
 
-    name: Mapped[str] = mapped_column(String(255))
-    description: Mapped[Optional[str]] = mapped_column(String(512), default=None)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    id_template: Mapped[Optional[int]] = mapped_column(default=None)
+    description: Mapped[Optional[str_sized(512)]] = mapped_column(default=None)
+    created_at: Mapped[DatetimeTimeZone] = mapped_column(default=datetime.utcnow)
 
     def __repr__(self) -> str:
         return f"Task(id={self.id!r}, name={self.name!r})"

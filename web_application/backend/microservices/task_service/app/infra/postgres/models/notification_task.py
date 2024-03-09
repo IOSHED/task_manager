@@ -1,12 +1,12 @@
-from datetime import datetime, time
+from datetime import time
 from typing import Optional
 
-from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.shemas.models.notification_task import NotificationTaskSchema
 from app.infra.postgres import db
 from app.usecase.interfaces.to_read_model import IToReadModel
+from usecase.annotated_types.model import IntPk, DatetimeTimeZone, foreign_key_delete_cascade
 
 
 class NotificationTask(db.Base, IToReadModel):
@@ -20,10 +20,10 @@ class NotificationTask(db.Base, IToReadModel):
     """
     __tablename__ = "notification_task"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    task_id: Mapped[int] = mapped_column(ForeignKey("task.id", ondelete="CASCADE"), unique=True)
+    id: Mapped[IntPk]
+    send_notification_at: Mapped[DatetimeTimeZone]
 
-    send_notification_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    task_id: Mapped[foreign_key_delete_cascade("task.id")] = mapped_column(unique=True)
     duration_send_notification_at: Mapped[Optional[time]] = mapped_column(default=None)
 
     def __repr__(self) -> str:
