@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Integer, DateTime
+from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.shemas.models.complete_task import CompleteTaskSchema
 from app.infra.postgres import db
-from app.utils.interfaces.base import IToReadModel
+from app.usecase.interfaces.to_read_model import IToReadModel
 
 
 class CompleteTask(db.Base, IToReadModel):
@@ -20,11 +20,11 @@ class CompleteTask(db.Base, IToReadModel):
     """
     __tablename__ = "complete_task"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    task_id: Mapped[int] = mapped_column(Integer, unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    task_id: Mapped[int] = mapped_column(ForeignKey("task.id", ondelete="CASCADE"), unique=True)
 
-    complete_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
-    planned_complete_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    complete_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), default=None)
+    planned_complete_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), default=None)
 
     def __repr__(self) -> str:
         return f"CompleteTask(id={self.id!r}, planned_complete_at={self.planned_complete_at!r})"

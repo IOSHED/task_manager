@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy.exc import DatabaseError
 from starlette import status
 
-from app.utils.dependencies import UOWDep
+from app.usecase.uow.dependencies import UOWDep
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.requests.user.dependencies import ActiveUser
 from app.usecase.service.task import TaskService

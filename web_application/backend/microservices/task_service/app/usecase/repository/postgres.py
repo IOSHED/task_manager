@@ -3,7 +3,7 @@ from typing import List, Any
 from sqlalchemy import insert, update, select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.utils.repository import AbstractRepository
+from app.usecase.repository import AbstractRepository
 
 
 class SQLAlchemyRepository(AbstractRepository):

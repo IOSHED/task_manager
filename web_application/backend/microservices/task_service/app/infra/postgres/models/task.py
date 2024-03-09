@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import String, Integer, DateTime
+from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.shemas.models.task import TaskSchema
 from app.infra.postgres import db
-
-from app.utils.interfaces.base import IToReadModel
+from app.usecase.interfaces.to_read_model import IToReadModel
 
 
 class Task(db.Base, IToReadModel):
@@ -23,13 +22,13 @@ class Task(db.Base, IToReadModel):
     """
     __tablename__ = "task"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    id_template: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, default=None)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    create_by: Mapped[int]
+    id_template: Mapped[Optional[int]] = mapped_column(default=None)
 
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(String(512), nullable=True, default=None)
-    create_by: Mapped[int] = mapped_column(Integer, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+    name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[Optional[str]] = mapped_column(String(512), default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
 
     def __repr__(self) -> str:
         return f"Task(id={self.id!r}, name={self.name!r})"
