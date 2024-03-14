@@ -11,7 +11,10 @@ from app.usecase.requests.user.dependencies import ActiveUser
 from app.usecase.service.task import TaskService
 from app.domain.shemas.response.task_create import ResponseTaskSchemaCreate
 from app.domain.shemas.response.error import Http401Error, Http404Error, Http500Error
-from app.main import settings
+from app.infra.config.config import Settings
+
+
+SETTINGS = Settings()
 
 router = APIRouter()
 
@@ -88,11 +91,11 @@ async def add_task(
         return created_task_response
 
     except DatabaseError as err:
-        if settings.mode == Mode.local:
+        if SETTINGS.mode == Mode.local:
             return Http500Error(detail={"msg": "Database Error", "err": err})
         return Http500Error(detail="Database Error")
 
     except Exception as err:
-        if settings.mode == Mode.local:
+        if SETTINGS.mode == Mode.local:
             return Http500Error(detail={"msg": "Internal Server Error", "err": err})
         return Http500Error(detail="Internal Server Error")

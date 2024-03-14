@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.infra.config.config import settings
+from app.infra.config.config import Settings
 from app.intrerface.http.url import router as router_task
+
+# First init config
+settings = Settings()
+
+# Init logger
+
 
 # Init app
 app = FastAPI(
