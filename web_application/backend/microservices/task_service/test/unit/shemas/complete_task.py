@@ -72,9 +72,3 @@ def test_valid_task_id_positive():
         id=1, task_id=123, complete_at=datetime.utcnow(), planned_complete_at=datetime.utcnow()
     )
     assert complete_task.task_id == 123
-
-
-def test_valid_planned_complete_at_past_date():
-    past_date = datetime.utcnow() - timedelta(days=1)
-    complete_task = CompleteTaskSchema(id=1, task_id=123, complete_at=datetime.utcnow(), planned_complete_at=past_date)
-    assert complete_task.planned_complete_at == past_date

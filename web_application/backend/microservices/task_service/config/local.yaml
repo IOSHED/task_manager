@@ -1,0 +1,9 @@
+mode: "local" # local, dev
+
+database:
+  postgres:
+    user: task_db_username
+    password: task_db_password
+    db: task_db_dev
+    host: postgres_task
+    port: 5432

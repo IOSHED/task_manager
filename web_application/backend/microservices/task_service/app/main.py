@@ -1,26 +1,26 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app import config
+from app.infra.config.config import settings
 from app.intrerface.http.url import router as router_task
 
 # Init app
 app = FastAPI(
-    title=config.NAME_SERVICE,
-    openapi_url=f"{config.PATH_SERVICE}/openapi.json",
-    docs_url=f"{config.PATH_SERVICE}/docs"
+    title=settings.base.name_service,
+    openapi_url=f"{settings.base.path_service}/openapi.json",
+    docs_url=f"{settings.base.path_service}/docs"
 )
 
 # All include routers
 app.include_router(
     router_task,
-    prefix=config.PATH_SERVICE,
+    prefix=settings.base.path_service,
 )
 
 # All use middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.ORIGINS,
+    allow_origins=settings.base.origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",

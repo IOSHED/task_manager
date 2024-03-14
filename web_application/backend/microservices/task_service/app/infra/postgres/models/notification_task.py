@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.shemas.models.notification_task import NotificationTaskSchema
 from app.infra.postgres import db
-from app.usecase.interfaces.to_read_model import IToReadModel
+from app.infra.postgres.interface import IToReadModel
 from app.domain.annotated_types.model import IntPk, DatetimeTimeZone, foreign_key_delete_cascade
 
 

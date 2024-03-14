@@ -4,13 +4,14 @@ from fastapi import APIRouter
 from sqlalchemy.exc import DatabaseError
 from starlette import status
 
-from app import config
+from app.infra.config.enums import Mode
 from app.usecase.uow.dependencies import UOWDep
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.requests.user.dependencies import ActiveUser
 from app.usecase.service.task import TaskService
 from app.domain.shemas.response.task_create import ResponseTaskSchemaCreate
 from app.domain.shemas.response.error import Http401Error, Http404Error, Http500Error
+from app.main import settings
 
 router = APIRouter()
 
@@ -87,11 +88,11 @@ async def add_task(
         return created_task_response
 
     except DatabaseError as err:
-        if config.MODE == "Debug":
+        if settings.mode == Mode.local:
             return Http500Error(detail={"msg": "Database Error", "err": err})
         return Http500Error(detail="Database Error")
 
     except Exception as err:
-        if config.MODE == "Debug":
+        if settings.mode == Mode.local:
             return Http500Error(detail={"msg": "Internal Server Error", "err": err})
         return Http500Error(detail="Internal Server Error")

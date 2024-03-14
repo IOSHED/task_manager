@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.config import POSTGRES_HOST, POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_PORT
+from app.main import settings
 from app.infra.postgres.db import Base
 from app.infra.postgres.models.task import Task
 from app.infra.postgres.models.complete_task import CompleteTask
@@ -23,11 +23,11 @@ _models = [
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "POSTGRES_HOST", POSTGRES_HOST)
-config.set_section_option(section, "POSTGRES_PORT", POSTGRES_PORT)
-config.set_section_option(section, "POSTGRES_USER", POSTGRES_USER)
-config.set_section_option(section, "POSTGRES_DB", POSTGRES_DB)
-config.set_section_option(section, "POSTGRES_PASSWORD", POSTGRES_PASSWORD)
+config.set_section_option(section, "POSTGRES_HOST", settings.database.postgres.host)
+config.set_section_option(section, "POSTGRES_PORT", settings.database.postgres.port)
+config.set_section_option(section, "POSTGRES_USER", settings.database.postgres.user)
+config.set_section_option(section, "POSTGRES_DB", settings.database.postgres.db)
+config.set_section_option(section, "POSTGRES_PASSWORD", settings.database.postgres.password)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

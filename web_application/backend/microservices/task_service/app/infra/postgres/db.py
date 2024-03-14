@@ -2,16 +2,16 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-from app import config
+from app.infra.config.enums import Mode
+from app.main import settings
 
 
 class Base(DeclarativeBase):
     pass
 
 
-engine = create_async_engine(config.DATABASE_URL, echo=True)
-
-if config.MODE == "DEBUG":
+engine = create_async_engine(settings.database.postgres.database_url, echo=False)
+if settings.mode == Mode.local:
     engine.echo = True
 
 async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

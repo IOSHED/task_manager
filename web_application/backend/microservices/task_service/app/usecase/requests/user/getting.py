@@ -3,7 +3,7 @@ from typing import Union
 import requests
 from fastapi import Request
 
-from app import config
+from app.main import settings
 from app.usecase.requests.user.shemas import DataUser
 from app.domain.shemas.response.error import Http401Error
 
@@ -11,7 +11,7 @@ from app.domain.shemas.response.error import Http401Error
 def __get_current_user(request: Request) -> Union[DataUser, Http401Error]:
     """Отправляет запрос на `auth_service` и получает данные о текущем пользователе."""
     jwt_token = request.cookies.get("bonds")
-    response = requests.get(config.URL_GET_CURRENT_USER, cookies={'bonds': jwt_token})
+    response = requests.get(settings.request.get_current_user, cookies={'bonds': jwt_token})
     user_info = response.json()
     if 'detail' in user_info:
         return Http401Error(detail="Unauthorized")
