@@ -82,6 +82,6 @@ class Settings(BaseSettings):
         return init_settings, env_settings, YamlLoadConfigWithInheritFiles(settings_cls, path_config)
 
     def __new__(cls, *args, **kwargs) -> Self:
-        if cls.__instance is None:
+        if not hasattr(cls, '__instance'):
             cls.__instance = super(Settings, cls).__new__(cls)
         return cls.__instance

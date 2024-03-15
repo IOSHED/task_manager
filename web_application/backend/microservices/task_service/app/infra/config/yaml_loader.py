@@ -23,7 +23,6 @@ class YamlLoadConfigWithInheritFiles(PydanticBaseSettingsSource):
             if not path.is_file():
                 print(f"No file found at `{path.resolve()}`")
                 continue
-            print(f"Reading config file `{path.resolve()}`")
             if path.suffix in {".yaml", ".yml"}:
                 self.dict_config = deep_update(self.dict_config, YamlLoadConfigWithInheritFiles.load_yaml(path))
             else:

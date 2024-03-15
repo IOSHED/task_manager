@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from app.usecase.uow.dependencies import UOWDep
@@ -5,6 +6,9 @@ from app.usecase.uow.dependencies import UOWDep
 from app.domain.shemas.models.notification_task import NotificationTaskSchema
 from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
 from app.domain.convector.data_for_notification_task import get_data_for_notification_task
+
+
+logger = logging.getLogger("console_log")
 
 
 class NotificationTaskService:
@@ -18,6 +22,7 @@ class NotificationTaskService:
     ) -> Optional[NotificationTaskSchema]:
 
         data_for_notification_task = get_data_for_notification_task(task_create, task_id)
+        logger.debug(f"data for creating notification task -> {data_for_notification_task}")
         if data_for_notification_task is not None:
             notification_task_id = await self.uow.notification_task.add_one(
                 data=data_for_notification_task.model_dump()
