@@ -1,7 +1,7 @@
 from typing import Optional
 
-from app.domain.shemas.models.notification_task import NotificationTaskSchemaCreate
-from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.models.notification_task import NotificationTaskSchemaCreate
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 
 
 def get_data_for_notification_task(

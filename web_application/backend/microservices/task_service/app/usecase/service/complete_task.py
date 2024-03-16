@@ -1,8 +1,8 @@
 import logging
 from typing import Optional
 
-from app.domain.shemas.models.complete_task import CompleteTaskSchema
-from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.models.complete_task import CompleteTaskSchema
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.uow.dependencies import UOWDep
 from app.domain.convector.data_for_complete_task import get_data_for_complete_task
 

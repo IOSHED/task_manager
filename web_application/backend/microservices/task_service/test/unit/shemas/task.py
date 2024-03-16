@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from domain.shemas.models.task import TaskSchema
+from domain.schemas.models.task import TaskSchema
 
 
 @pytest.fixture

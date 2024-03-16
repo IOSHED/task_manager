@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timedelta
 from pydantic import ValidationError
 
-from domain.shemas.models.complete_task import CompleteTaskSchema
+from domain.schemas.models.complete_task import CompleteTaskSchema
 
 
 @pytest.fixture

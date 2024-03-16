@@ -1,36 +1,37 @@
 from typing import Optional
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.domain.shemas.models.complete_task import CompleteTaskSchema
 from app.infra.postgres import db
-from app.infra.postgres.interface import IToReadModel
 from app.domain.annotated_types.model import IntPk, DatetimeTimeZone, foreign_key_delete_cascade
 
 
-class CompleteTask(db.Base, IToReadModel):
+class CompleteTask(db.Base):
     """
-    Модель содержит записи о тех `Task`, которые должны будут завершины когда-то.\n
+    The model contains records of those `Task` that will have to be completed sometime.\n
 
-    :param id (int)                                 - уникальный индификатор `NotificationTask`;\n
-    :param task_id (int)                            - id `Task`, к которому привязана эта запись;\n
-    :param complete_at (Optional[datatime])         - когда была выполнена задача;\n
-    :param planned_complete_at (Optional[datatime]) - время когда планируется завершить `Task`;\n
+    :param id (int)                                 - unique indicator `NotificationTask`;\n
+    :param task_id (int)                            - id `Task` which liked this record;\n
+    :param complete_at (Optional[datatime])         - when the task was completed;\n
+    :param planned_complete_at (Optional[datatime]) - tie when planned complete the `Task`;\n
     """
+
+    # config filed
     __tablename__ = "complete_task"
+    __table_args__ = (
+        Index("idx_id", "id"),
+        Index("idx_id", "planned_complete_at"),
+    )
+    _repr_field = (
+        "id",
+        "task_id",
+        "planned_complete_at",
+    )
+    task: Mapped["Task"] = relationship(back_populates="complete_task")
 
+    # table filed
     id: Mapped[IntPk]
     task_id: Mapped[foreign_key_delete_cascade("task.id")] = mapped_column(unique=True)
     complete_at: Mapped[Optional[DatetimeTimeZone]] = mapped_column(default=None)
     planned_complete_at: Mapped[Optional[DatetimeTimeZone]] = mapped_column(default=None)
-
-    def __repr__(self) -> str:
-        return f"CompleteTask(id={self.id!r}, planned_complete_at={self.planned_complete_at!r})"
-
-    def to_read_model(self) -> CompleteTaskSchema:
-        return CompleteTaskSchema(
-            id=self.id,
-            task_id=self.task_id,
-            complete_at=self.complete_at,
-            planned_complete_at=self.planned_complete_at
-        )

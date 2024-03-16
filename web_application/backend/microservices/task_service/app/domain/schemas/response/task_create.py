@@ -2,9 +2,9 @@ from typing import Optional
 
 import pydantic
 
-from app.domain.shemas.models.task import TaskSchema
-from app.domain.shemas.models.notification_task import NotificationTaskSchema
-from app.domain.shemas.models.complete_task import CompleteTaskSchema
+from app.domain.schemas.models.task import TaskSchema
+from app.domain.schemas.models.notification_task import NotificationTaskSchema
+from app.domain.schemas.models.complete_task import CompleteTaskSchema
 
 
 class ResponseTaskSchemaCreate(pydantic.BaseModel):

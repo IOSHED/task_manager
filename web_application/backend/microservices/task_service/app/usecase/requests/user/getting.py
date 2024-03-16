@@ -4,7 +4,7 @@ import requests
 from fastapi import Request
 
 from app.usecase.requests.user.shemas import DataUser
-from app.domain.shemas.response.error import Http401Error
+from app.domain.schemas.response.error import Http401Error
 from app.infra.config.config import Settings
 
 

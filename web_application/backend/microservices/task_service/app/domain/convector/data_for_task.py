@@ -1,5 +1,5 @@
-from app.domain.shemas.models.task import TaskSchemaCreate
-from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.models.task import TaskSchemaCreate
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 
 
 def get_data_for_task(task_create: RequestTaskSchemaCreate, user_id: int) -> TaskSchemaCreate:

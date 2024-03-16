@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 from datetime import datetime, time, timedelta
 
-from domain.shemas.models.notification_task import NotificationTaskSchema
+from domain.schemas.models.notification_task import NotificationTaskSchema
 
 
 @pytest.fixture

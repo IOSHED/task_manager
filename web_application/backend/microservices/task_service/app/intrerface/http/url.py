@@ -6,11 +6,11 @@ from sqlalchemy.exc import DatabaseError
 from starlette import status
 
 from app.usecase.uow.dependencies import UOWDep
-from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.requests.user.dependencies import ActiveUser
 from app.usecase.service.task import TaskService
-from app.domain.shemas.response.task_create import ResponseTaskSchemaCreate
-from app.domain.shemas.response.error import Http401Error, Http404Error, Http500Error
+from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
+from app.domain.schemas.response.error import Http401Error, Http404Error, Http500Error
 
 
 logger = logging.getLogger("console_log")

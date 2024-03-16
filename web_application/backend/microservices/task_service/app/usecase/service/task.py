@@ -1,7 +1,7 @@
 import logging
 
-from app.domain.shemas.requests.task_create import RequestTaskSchemaCreate
-from app.domain.shemas.response.task_create import ResponseTaskSchemaCreate
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
 
 from app.domain.convector.data_for_task import get_data_for_task
 from app.usecase.uow.dependencies import UOWDep

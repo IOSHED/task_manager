@@ -24,7 +24,7 @@ config = context.config
 
 section = config.config_ini_section
 config.set_section_option(section, "POSTGRES_HOST", SETTINGS.database.postgres.host)
-config.set_section_option(section, "POSTGRES_PORT", SETTINGS.database.postgres.port)
+config.set_section_option(section, "POSTGRES_PORT", str(SETTINGS.database.postgres.port))
 config.set_section_option(section, "POSTGRES_USER", SETTINGS.database.postgres.user)
 config.set_section_option(section, "POSTGRES_DB", SETTINGS.database.postgres.db)
 config.set_section_option(section, "POSTGRES_PASSWORD", SETTINGS.database.postgres.password)
