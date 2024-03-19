@@ -5,7 +5,12 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.infra.config.config import Settings
-from app.intrerface.http.url import router as router_task
+from app.intrerface.http.routers.add_task import router as router_add_task
+from app.intrerface.http.routers.delete_task import router as router_delete_task
+from app.intrerface.http.routers.get_user_task import router as router_get_user_task
+from app.intrerface.http.routers.get_task_by_id import router as router_get_task_by_id
+from app.intrerface.http.routers.update_task import router as router_update_task
+from app.intrerface.http.routers.text_search_by_task import router as router_text_search_by_task
 from app.infra.logger.log import logging_config
 
 # First init config
@@ -24,10 +29,13 @@ app = FastAPI(
 logger.info(f"Complete init FastAPI app")
 
 # All include routers
-app.include_router(
-    router_task,
-    prefix=SETTINGS.base.path_service,
-)
+app.include_router(router_add_task, prefix=SETTINGS.base.path_service)
+app.include_router(router_delete_task, prefix=SETTINGS.base.path_service)
+app.include_router(router_get_user_task, prefix=SETTINGS.base.path_service)
+app.include_router(router_get_task_by_id, prefix=SETTINGS.base.path_service)
+app.include_router(router_update_task, prefix=SETTINGS.base.path_service)
+app.include_router(router_text_search_by_task, prefix=SETTINGS.base.path_service)
+
 logger.info(f"Complete include router")
 
 # All use middleware
