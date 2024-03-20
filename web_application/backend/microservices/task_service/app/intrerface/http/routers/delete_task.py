@@ -21,7 +21,7 @@ router = APIRouter()
     tags=["Task"],
     summary="Delete task if user is admin or owner",
     responses={
-        status.HTTP_200_OK: {
+        status.HTTP_204_NO_CONTENT: {
             "model": None,
             "description": "task success deleted",
         },

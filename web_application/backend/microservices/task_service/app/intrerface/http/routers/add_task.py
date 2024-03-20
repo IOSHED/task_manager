@@ -83,7 +83,7 @@ async def add_task(
         created_task_response = await task_service.create(new_task, user.id)
         logger.info(f"created new task -> {created_task_response.model_dump()}")
 
-        if not created_task_response.task:
+        if created_task_response is None:
             logger.error(f"this task not created -> {new_task.model_dump()}")
             raise Http404Error(detail="Task not created")
 

@@ -24,8 +24,5 @@ class NotificationTaskService:
         data_for_notification_task = get_data_for_notification_task(task_create, task_id)
         logger.debug(f"data for creating notification task -> {data_for_notification_task}")
         if data_for_notification_task is not None:
-            notification_task_id = await self.uow.notification_task.add_one(
-                data=data_for_notification_task.model_dump()
-            )
-            return await self.uow.notification_task.find_one(id=notification_task_id)
+            await self.uow.notification_task.add_one(data=data_for_notification_task.model_dump())
         return None

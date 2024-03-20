@@ -23,6 +23,5 @@ class CompleteTaskService:
         data_for_complete_task = get_data_for_complete_task(task_create, task_id)
         logger.debug(f"data for creating complete task -> {data_for_complete_task}")
         if data_for_complete_task is not None:
-            complete_task_id = await self.uow.complete_task.add_one(data=data_for_complete_task.model_dump())
-            return await self.uow.complete_task.find_one(id=complete_task_id)
+            await self.uow.complete_task.add_one(data=data_for_complete_task.model_dump())
         return None
