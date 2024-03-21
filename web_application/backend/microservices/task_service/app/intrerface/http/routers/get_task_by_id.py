@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.exc import DatabaseError, NoResultFound
 from starlette import status
 
@@ -35,7 +35,7 @@ router = APIRouter()
     }
 )
 async def get_task_by_id(
-    id_task: int,
+    id_task: int = Path(description="ID getting task"),
     task_service: TaskService = Depends(TaskService),
 ) -> Any:
     try:
@@ -43,11 +43,11 @@ async def get_task_by_id(
 
         task_response = await task_service.get_by_id(id_task)
 
-        if task_response is None:
-            logger.error(f"this task is absent -> id ={id_task}")
-            raise Http404Error(detail="task with this id does not exist")
-
         return task_response
+
+    except NoResultFound:
+        logger.info(f"this task is absent -> id ={id_task}")
+        raise Http404Error(detail="task with this id does not exist")
 
     except DatabaseError as err:
         logger.error(f"database error during create task -> {err}")

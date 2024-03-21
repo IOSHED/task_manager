@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 from fastapi import APIRouter, Depends
-from sqlalchemy.exc import DatabaseError
+from sqlalchemy.exc import DatabaseError, NoResultFound
 from starlette import status
 
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
@@ -83,11 +83,11 @@ async def add_task(
         created_task_response = await task_service.create(new_task, user.id)
         logger.info(f"created new task -> {created_task_response.model_dump()}")
 
-        if created_task_response is None:
-            logger.error(f"this task not created -> {new_task.model_dump()}")
-            raise Http404Error(detail="Task not created")
-
         return created_task_response
+
+    except NoResultFound:
+        logger.info(f"this task not created -> {new_task.model_dump()}")
+        raise Http404Error(detail="Task not created")
 
     except DatabaseError as err:
         logger.error(f"database error during create task -> {err}")
