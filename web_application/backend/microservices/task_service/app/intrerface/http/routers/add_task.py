@@ -49,7 +49,7 @@ async def add_task(
     """
     Add a new task for the current user.
 
-    Parameters:
+    Params:
     - new_task (RequestTaskSchemaCreate): The task data to be created.
     - uow (UOWDep): The unit of work dependency for database operations.
     - user (ActiveUser): The current active user.

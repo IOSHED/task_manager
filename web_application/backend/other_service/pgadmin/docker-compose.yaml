@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4:7.2
+    env_file: .env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - 5555:80
+
+
+volumes:
+  pgadmin-data:

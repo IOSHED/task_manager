@@ -29,7 +29,7 @@ class Task(db.Base):
     _repr_field = (
         "id",
         "name",
-        "create _at",
+        "create_at",
     )
     complete_task: Mapped["CompleteTask"] = relationship(back_populates="task")
     notification_task: Mapped["NotificationTask"] = relationship(back_populates="task")

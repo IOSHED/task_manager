@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from typing import List, Any
+from typing import List, Any, Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.exc import NoResultFound, DatabaseError
@@ -16,17 +16,19 @@ logger = logging.getLogger("console_log")
 router = APIRouter()
 
 
-class GroupBy(Enum):
-    created_at: str = "created_at"
-    planned_complete_at: str = "planned_complete_at"
-    complete_at: str = "complete_at"
+class OrderBy(Enum):
+    created_at: str = "task.created_at"
+    planned_complete_at: str = "complete_task.planned_complete_at"
+    complete_at: str = "complete_task.complete_at"
+    send_notification_at: str = "notification_task.send_notification_at"
+    duration_send_notification_at: str = "notification_task.duration_send_notification_at"
 
     def __str__(self) -> str:
         return f"{self.value}"
 
 
 @router.get(
-    "/",
+    "/list",
     description="""
         Getting user tasks with a max limit is 25 and grouping by field priority:
         created_at, planned_complete_at, complete_at
@@ -54,7 +56,7 @@ class GroupBy(Enum):
 )
 async def get_user_task(
     user: ActiveUser,
-    group_by: GroupBy,
+    order_by: OrderBy,
     skip: int = Query(
         default=0,
         ge=0,
@@ -65,16 +67,44 @@ async def get_user_task(
         le=25,
         description="the number of records to be output",
     ),
+    id_template: Optional[int] = Query(
+        gt=0,
+        default=None,
+        description="if is not None then select all task having template by this id"
+    ),
+    desc: bool = Query(
+        default=True,
+        description="is reverse results by 'order_by'"
+    ),
+    is_show_notification: Optional[bool] = Query(
+        default=None,
+        description="show only task having send notification or, on the contrary, task not having send notification",
+    ),
+    is_show_complete: Optional[bool] = Query(
+        default=None,
+        description="""
+            show only task having possibility of completion or, on the contrary, task not having possibility of completion
+        """,
+    ),
     task_service: TaskService = Depends(TaskService),
 ) -> Any:
     try:
-        logger.info(f"get task user = {user.id} with limit = {limit}, skip = {skip}, group_by = {str(group_by)}")
+        logger.info(f"get task user = {user.id} with limit = {limit}, skip = {skip}, group_by = {str(order_by)}")
 
         if isinstance(user, Http401Error):
             logger.info(f"current user is not auth -> {user}")
             raise Http401Error(detail=user.detail)
 
-        tasks_response = await task_service.get_user_task(user.id, skip, limit, str(group_by))
+        tasks_response = await task_service.get_user_task(
+            user.id,
+            skip,
+            limit,
+            str(order_by),
+            desc,
+            id_template=id_template,
+            is_show_notification=is_show_notification,
+            is_show_complete=is_show_complete,
+        )
         logger.info(f"got task -> {tasks_response}")
 
         return tasks_response

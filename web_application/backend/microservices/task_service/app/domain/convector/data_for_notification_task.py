@@ -4,6 +4,7 @@ from app.domain.schemas.models.notification_task import NotificationTaskSchemaCr
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 
 
+# TODO: async function
 def get_data_for_notification_task(
     task_create: RequestTaskSchemaCreate,
     task_id: int

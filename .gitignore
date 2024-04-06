@@ -13,3 +13,4 @@ task.txt
 /web_application/backend/microservices/task_service/.env
 
 /web_application/backend/nginx/.env
+/web_application/backend/other_service/pgadmin/.env

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 
 import pydantic
 from pydantic import PositiveInt, constr
@@ -8,6 +8,7 @@ from app.domain.schemas.models.complete_task import CompleteTaskSchema
 from app.domain.schemas.models.notification_task import NotificationTaskSchema
 
 
+# TODO: rewrite docs
 class TaskSchema(pydantic.BaseModel):
     """Схема по модели `Task`"""
 
@@ -22,9 +23,21 @@ class TaskSchema(pydantic.BaseModel):
         from_attributes = True
 
 
+class TaskSchemaJoin(TaskSchema, CompleteTaskSchema, NotificationTaskSchema):
+    task_id: PositiveInt
+    complete_task_id: Optional[PositiveInt] = None
+    notification_task_id: Optional[PositiveInt] = None
+
+    # TODO: delete it
+    # redefining a field inherited from other schemas for the `None` type in on sql query
+    id: Optional[None] = None
+    send_notification_at: Optional[datetime] = None
+
+
 class TaskSchemaRelationship(TaskSchema):
-    notification_task: Optional[NotificationTaskSchema] = None
-    complete_task: Optional[CompleteTaskSchema] = None
+    # TODO: replace type `Any`
+    notification_task: Optional[Any]
+    complete_task: Optional[Any]
 
 
 class TaskSchemaCreate(pydantic.BaseModel):
@@ -40,3 +53,5 @@ class TaskSchemaGet(pydantic.BaseModel):
     task: TaskSchema
     notification_task: Optional[NotificationTaskSchema] = None
     complete_task: Optional[CompleteTaskSchema] = None
+
+

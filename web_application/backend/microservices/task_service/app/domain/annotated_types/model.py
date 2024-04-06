@@ -9,6 +9,7 @@ IntPk = Annotated[int, mapped_column(primary_key=True)]
 DatetimeTimeZone = Annotated[datetime, mapped_column(DateTime(timezone=True))]
 
 
+# TODO: docs
 def str_sized(max_length: int) -> type[str]:
     """Генерирует тип `mapped_column(String(max_length))`, где max_length вы указываете как аргумент."""
     return Annotated[str, mapped_column(String(max_length))]

@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
@@ -64,10 +64,24 @@ class TaskService:
         id_user: int,
         skip: int,
         limit: int,
-        group_by: str,
+        order_by: str,
+        desc: bool,
+        id_template: Optional[int] = None,
+        is_show_notification: Optional[bool] = None,
+        is_show_complete: Optional[bool] = None,
     ) -> List[ResponseTaskSchemaGet]:
         async with self.uow:
-            tasks_get_schema = await self.uow.task.find_user_task(id_user, skip, limit, group_by)
+            aliased_order_by = order_by.replace(".", "_1.", 1)
+            tasks_get_schema = await self.uow.task.find_user_task(
+                id_user,
+                skip,
+                limit,
+                aliased_order_by,
+                desc_res=desc,
+                id_template=id_template,
+                is_show_notification=is_show_notification,
+                is_show_complete=is_show_complete,
+            )
 
             return [
                 ResponseTaskSchemaGet(
@@ -76,7 +90,6 @@ class TaskService:
                     notification=task_get_schema.notification_task,
                 ) for task_get_schema in tasks_get_schema
             ]
-
 
     async def __add_task(self, task_create: RequestTaskSchemaCreate, user_id: int) -> int:
         data_for_task = get_data_for_task(task_create, user_id)
