@@ -10,7 +10,7 @@ from app.usecase.service.complete_task import CompleteTaskService
 from app.domain.schemas.requests.task_delete import RequestTaskSchemaDelete
 from app.usecase.requests.user.shemas import DataUser
 from app.domain.schemas.response.task_get import ResponseTaskSchemaGet
-
+from app.domain.schemas.response.task_full_search import ResponseTaskSchemaFulltextSearch
 
 logger = logging.getLogger("console_log")
 
@@ -89,6 +89,23 @@ class TaskService:
                     complete=task_get_schema.complete_task,
                     notification=task_get_schema.notification_task,
                 ) for task_get_schema in tasks_get_schema
+            ]
+
+    async def fulltext_search(
+        self,
+        string_search: str,
+        id_user: int,
+        limit: int,
+    ) -> List[ResponseTaskSchemaFulltextSearch]:
+        async with self.uow:
+            tasks_fulltext_search = await self.uow.task.fulltext_search(string_search, id_user, limit)
+            logger.info(f"got sql result full-text search -> {tasks_fulltext_search}")
+            return [
+                ResponseTaskSchemaFulltextSearch(
+                    task_id=task_fulltext_search.id,
+                    name=task_fulltext_search.name,
+                    description=task_fulltext_search.description,
+                ) for task_fulltext_search in tasks_fulltext_search
             ]
 
     async def __add_task(self, task_create: RequestTaskSchemaCreate, user_id: int) -> int:

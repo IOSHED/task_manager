@@ -21,7 +21,7 @@ class NotificationTask(db.Base):
     # config field
     __tablename__ = "notification_task"
     __table_args__ = (
-        Index("idx_id", "id"),
+        Index("idx_for_notification_task", "id"),
         Index("idx_send_notification_at", "send_notification_at"),
     )
     _repr_field = (
@@ -29,7 +29,7 @@ class NotificationTask(db.Base):
         "task_id",
         "send_notification_at",
     )
-    task: Mapped["Task"] = relationship(back_populates="notification_task")
+    task: Mapped["Task"] = relationship(back_populates="notification_task", cascade="all, delete")
 
     # table filed
     id: Mapped[IntPk]

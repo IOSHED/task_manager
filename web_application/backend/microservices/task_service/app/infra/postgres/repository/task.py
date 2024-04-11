@@ -1,16 +1,18 @@
 import logging
 from typing import List, Optional
 
-from sqlalchemy import select, text, desc
+from sqlalchemy import select, text, desc, func
 from sqlalchemy.orm import selectinload, aliased
 
 from app.infra.postgres.models.task import Task
 from app.infra.postgres.orm_repository import SQLAlchemyRepository
-from app.domain.schemas.models.task import TaskSchema, TaskSchemaGet, TaskSchemaRelationship, TaskSchemaJoin
+from app.domain.schemas.models.task import TaskSchema, TaskSchemaGet, TaskSchemaRelationship, TaskSchemaJoin, \
+    TaskSchemaFulltextSearch
 from app.infra.postgres.repository.complete_task import CompleteTaskRepository
 from app.infra.postgres.repository.notification_task import NotificationTaskRepository
 
-# logger = logging.getLogger("console_log")
+
+logger = logging.getLogger("console_log")
 
 
 class TaskRepository(SQLAlchemyRepository):
@@ -41,6 +43,27 @@ class TaskRepository(SQLAlchemyRepository):
             ) if res.complete_task is not None else None,
         )
 
+    async def fulltext_search(self, string_search: str, id_user: int, limit: int) -> List[TaskSchemaFulltextSearch]:
+        columns = func.coalesce(self.model.name, '').concat(func.coalesce(self.model.description, ''))
+        columns = columns.self_group()  # wraps column concatenation in "brackets"
+
+        stmt = (
+            select(
+                self.model.id,
+                self.model.name,
+                self.model.description,
+            )
+            .filter(columns.bool_op("%")(string_search), self.model.create_by == id_user)
+            .order_by(func.similarity(columns, string_search).desc())
+            .limit(limit)
+        )
+        sql_results = await self.session.execute(stmt)
+
+        return [
+            TaskSchemaFulltextSearch.model_validate(sql_res, from_attributes=True)
+            for sql_res in sql_results.all()
+        ]
+
     async def find_user_task(
             self,
             id_user: int,
@@ -52,6 +75,7 @@ class TaskRepository(SQLAlchemyRepository):
             is_show_notification: Optional[bool] = None,
             is_show_complete: Optional[bool] = None,
     ) -> List[TaskSchemaGet]:
+        # TODO: move part in task_service. For example, filler logical
         n = aliased(NotificationTaskRepository.model)
         c = aliased(CompleteTaskRepository.model)
         t = aliased(self.model)

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Index
+from sqlalchemy import Index, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infra.postgres import db
@@ -23,8 +23,16 @@ class Task(db.Base):
     # config filed
     __tablename__ = "task"
     __table_args__ = (
-        Index("idx_id_and_create_by", "id", "create_by"),
-        Index("idx_search_name_description", "name", "description", postgresql_using="gin")
+        Index("idx_for_task", "id"),
+        Index("idx_create_by", "create_by"),
+        Index(
+            "idx_search_name_description",
+            func.coalesce("name", '').concat(func.coalesce("description", '')).label('columns'),
+            postgresql_using="gin",
+            postgresql_ops={
+                "columns": "gin_trgm_ops",
+            },
+        )
     )
     _repr_field = (
         "id",

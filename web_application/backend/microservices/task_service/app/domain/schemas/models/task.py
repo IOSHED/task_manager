@@ -55,3 +55,7 @@ class TaskSchemaGet(pydantic.BaseModel):
     complete_task: Optional[CompleteTaskSchema] = None
 
 
+class TaskSchemaFulltextSearch(pydantic.BaseModel):
+    id: PositiveInt
+    name: str
+    description: str

@@ -20,15 +20,16 @@ class CompleteTask(db.Base):
     # config filed
     __tablename__ = "complete_task"
     __table_args__ = (
-        Index("idx_id", "id"),
-        Index("idx_id", "planned_complete_at"),
+        Index("idx_for_complete_task", "id"),
+        Index("idx_planned_complete_at", "planned_complete_at"),
+        Index("idx_complete_at", "complete_at"),
     )
     _repr_field = (
         "id",
         "task_id",
         "planned_complete_at",
     )
-    task: Mapped["Task"] = relationship(back_populates="complete_task")
+    task: Mapped["Task"] = relationship(back_populates="complete_task", cascade="all, delete")
 
     # table filed
     id: Mapped[IntPk]
