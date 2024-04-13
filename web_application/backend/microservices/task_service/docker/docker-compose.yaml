@@ -1,12 +1,12 @@
 version: '3.7'
 
 services:
-  controller_task_service:
+  task_service:
     build:
       context: ..
       dockerfile: docker/Dockerfile
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-    container_name: controller_task_service
+    container_name: task_service
     volumes:
       - ../:/app/
     ports:
