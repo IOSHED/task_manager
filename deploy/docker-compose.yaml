@@ -1,8 +1,8 @@
 version: "3.7"
 
 include:
-  - ../web_application/backend/microservices/auth_service/docker/docker-compose.yaml
-  - ../web_application/backend/microservices/task_service/docker/docker-compose.yaml
+  - ../web_application/backend/microservices/view_auth_service/docker/docker-compose.yaml
+  - ../web_application/backend/microservices/controller_task_service/docker/docker-compose.yaml
   - ../web_application/backend/nginx/docker/docker-compose.yaml
   - ../web_application/backend/other_service/pgadmin/docker-compose.yaml
 
