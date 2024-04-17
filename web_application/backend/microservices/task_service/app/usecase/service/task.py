@@ -2,13 +2,13 @@ import logging
 from typing import List, Optional
 
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
+from app.domain.schemas.requests.task_update import RequestUpdatingDataTaskSchema
 from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
 from app.domain.convector.data_for_task import get_data_for_task
 from app.usecase.uow.dependencies import UOWDep
 from app.usecase.service.notification_task import NotificationTaskService
 from app.usecase.service.complete_task import CompleteTaskService
 from app.domain.schemas.requests.task_delete import RequestTaskSchemaDelete
-from app.usecase.requests.user.shemas import DataUser
 from app.domain.schemas.response.task_get import ResponseTaskSchemaGet
 from app.domain.schemas.response.task_full_search import ResponseTaskSchemaFulltextSearch
 
@@ -21,31 +21,25 @@ class TaskService:
 
     async def create(self, task_create: RequestTaskSchemaCreate, user_id: int) -> ResponseTaskSchemaCreate:
         async with self.uow:
-            task_id = await self.__add_task(task_create, user_id)
 
+            task_id = await self.__add_task(task_create, user_id)
             await NotificationTaskService(self.uow).add_notification_task(task_create, task_id)
             await CompleteTaskService(self.uow).add_complete_task(task_create, task_id)
             await self.uow.commit()
 
-            new_task = await self.get_by_id(task_id)
+        new_task = await self.get_by_id(task_id)
 
-            return ResponseTaskSchemaCreate(
-                task=new_task.task,
-                complete=new_task.complete,
-                notification=new_task.notification,
-            )
+        return ResponseTaskSchemaCreate(
+            task=new_task.task,
+            complete=new_task.complete,
+            notification=new_task.notification,
+        )
 
-    async def delete(self, args_query: RequestTaskSchemaDelete, user: DataUser) -> None:
+    async def delete(self, args_query: RequestTaskSchemaDelete, user_id: int) -> None:
         list_for_delete = args_query.id_for_deleting_tasks
         async with self.uow:
-            if user.is_superuser:
-                for id_task in list_for_delete:
-                    await self.uow.task.delete_one(id=id_task)
-                return
-
             for id_task in list_for_delete:
-                await self.uow.task.delete_one(id=id_task, create_by=user.id)
-
+                await self.uow.task.delete_one(id=id_task, create_by=user_id)
             await self.uow.commit()
 
     async def get_by_id(self, id_task: int) -> ResponseTaskSchemaGet:
@@ -107,6 +101,33 @@ class TaskService:
                     description=task_fulltext_search.description,
                 ) for task_fulltext_search in tasks_fulltext_search
             ]
+
+    async def update_task(self, updating_data_task: RequestUpdatingDataTaskSchema) -> None:
+        data_for_update_task = await updating_data_task.get_field_task()
+        data_for_update_notification_task = await updating_data_task.get_field_notification_task()
+        data_for_update_complete_task = await updating_data_task.get_field_complete_task()
+
+        task_id = updating_data_task.task_id
+
+        logger.info(f"data for updated tasks -> {data_for_update_task}, "
+                    f"n_task -> {data_for_update_notification_task},"
+                    f"c_task -> {data_for_update_complete_task},")
+
+        async with self.uow:
+
+            if data_for_update_task != {}:
+                await self.uow.task.edit_one(
+                   data_for_update_task, id=task_id
+                )
+            if data_for_update_notification_task != {}:
+                await NotificationTaskService(self.uow).update_notification_task(
+                    data_for_update_notification_task, task_id=task_id
+                )
+            if data_for_update_complete_task != {}:
+                await CompleteTaskService(self.uow).update_complete_task(
+                    data_for_update_complete_task, task_id=task_id
+                )
+            await self.uow.commit()
 
     async def __add_task(self, task_create: RequestTaskSchemaCreate, user_id: int) -> int:
         data_for_task = get_data_for_task(task_create, user_id)

@@ -13,7 +13,7 @@ class AbstractRepository(ABC):
         ...
 
     @abstractmethod
-    async def edit_one(self, unit_id: int, data: dict) -> int:
+    async def edit_one(self, data: dict, **filter_by) -> int:
         ...
 
     @abstractmethod

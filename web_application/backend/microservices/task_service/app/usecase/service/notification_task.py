@@ -1,4 +1,5 @@
 import logging
+from typing import Dict, Any
 
 from app.usecase.uow.dependencies import UOWDep
 
@@ -23,3 +24,8 @@ class NotificationTaskService:
         logger.debug(f"data for creating notification task -> {data_for_notification_task}")
         if data_for_notification_task is not None:
             await self.uow.notification_task.add_one(data=data_for_notification_task.model_dump())
+
+    async def update_notification_task(self, data_for_update_notification_task: Dict[str, Any], **filter_by) -> None:
+        await self.uow.notification_task.edit_one(
+            data_for_update_notification_task, **filter_by
+        )

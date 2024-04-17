@@ -6,4 +6,4 @@ base:
     - "http://127.0.0.1:8080"
 
 request:
-  get_current_user: "http://view_auth_service:8000/api/v1/auth/users/me"
+  get_current_user: "http://auth_service:8000/api/v1/auth/users/me"

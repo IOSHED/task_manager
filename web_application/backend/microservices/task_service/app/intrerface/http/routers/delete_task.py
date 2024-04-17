@@ -51,7 +51,7 @@ async def delete_task(
             logger.info(f"current user is not auth -> {user}")
             raise Http401Error(detail=user.detail)
 
-        await task_service.delete(args_query, user)
+        await task_service.delete(args_query, user.id)
 
         logger.info(f"deleted task -> {args_query}")
 

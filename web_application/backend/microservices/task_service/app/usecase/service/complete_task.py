@@ -1,4 +1,5 @@
 import logging
+from typing import Dict, Any
 
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.usecase.uow.dependencies import UOWDep
@@ -17,8 +18,12 @@ class CompleteTaskService:
         task_create: RequestTaskSchemaCreate,
         task_id: int,
     ) -> None:
-
         data_for_complete_task = get_data_for_complete_task(task_create, task_id)
         logger.debug(f"data for creating complete task -> {data_for_complete_task}")
         if data_for_complete_task is not None:
             await self.uow.complete_task.add_one(data=data_for_complete_task.model_dump())
+
+    async def update_complete_task(self, data_for_update_complete_task: Dict[str, Any], **filter_by) -> None:
+        await self.uow.complete_task.edit_one(
+            data_for_update_complete_task, **filter_by
+        )
