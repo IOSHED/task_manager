@@ -22,8 +22,3 @@ class CompleteTaskService:
         logger.debug(f"data for creating complete task -> {data_for_complete_task}")
         if data_for_complete_task is not None:
             await self.uow.complete_task.add_one(data=data_for_complete_task.model_dump())
-
-    async def update_complete_task(self, data_for_update_complete_task: Dict[str, Any], **filter_by) -> None:
-        await self.uow.complete_task.edit_one(
-            data_for_update_complete_task, **filter_by
-        )

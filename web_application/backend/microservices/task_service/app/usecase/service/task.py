@@ -2,7 +2,6 @@ import logging
 from typing import List, Optional
 
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
-from app.domain.schemas.requests.task_update import RequestUpdatingDataTaskSchema
 from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
 from app.domain.convector.data_for_task import get_data_for_task
 from app.usecase.uow.dependencies import UOWDep
@@ -44,14 +43,13 @@ class TaskService:
 
     async def get_by_id(self, id_task: int) -> ResponseTaskSchemaGet:
         async with self.uow:
-
             task_get_schema = await self.uow.task.find_task_by_id(id_task)
 
-            return ResponseTaskSchemaGet(
-                task=task_get_schema.task,
-                complete=task_get_schema.complete_task,
-                notification=task_get_schema.notification_task,
-            )
+        return ResponseTaskSchemaGet(
+            task=task_get_schema.task,
+            complete=task_get_schema.complete_task,
+            notification=task_get_schema.notification_task,
+        )
 
     async def get_user_task(
         self,
@@ -77,13 +75,13 @@ class TaskService:
                 is_show_complete=is_show_complete,
             )
 
-            return [
-                ResponseTaskSchemaGet(
-                    task=task_get_schema.task,
-                    complete=task_get_schema.complete_task,
-                    notification=task_get_schema.notification_task,
-                ) for task_get_schema in tasks_get_schema
-            ]
+        return [
+            ResponseTaskSchemaGet(
+                task=task_get_schema.task,
+                complete=task_get_schema.complete_task,
+                notification=task_get_schema.notification_task,
+            ) for task_get_schema in tasks_get_schema
+        ]
 
     async def fulltext_search(
         self,
@@ -93,41 +91,38 @@ class TaskService:
     ) -> List[ResponseTaskSchemaFulltextSearch]:
         async with self.uow:
             tasks_fulltext_search = await self.uow.task.fulltext_search(string_search, id_user, limit)
-            logger.info(f"got sql result full-text search -> {tasks_fulltext_search}")
-            return [
-                ResponseTaskSchemaFulltextSearch(
-                    task_id=task_fulltext_search.id,
-                    name=task_fulltext_search.name,
-                    description=task_fulltext_search.description,
-                ) for task_fulltext_search in tasks_fulltext_search
-            ]
+        logger.info(f"got sql result full-text search -> {tasks_fulltext_search}")
+        return [
+            ResponseTaskSchemaFulltextSearch(
+                task_id=task_fulltext_search.id,
+                name=task_fulltext_search.name,
+                description=task_fulltext_search.description,
+            ) for task_fulltext_search in tasks_fulltext_search
+        ]
 
-    async def update_task(self, updating_data_task: RequestUpdatingDataTaskSchema) -> None:
-        data_for_update_task = await updating_data_task.get_field_task()
-        data_for_update_notification_task = await updating_data_task.get_field_notification_task()
-        data_for_update_complete_task = await updating_data_task.get_field_complete_task()
-
-        task_id = updating_data_task.task_id
-
-        logger.info(f"data for updated tasks -> {data_for_update_task}, "
-                    f"n_task -> {data_for_update_notification_task},"
-                    f"c_task -> {data_for_update_complete_task},")
-
+    async def update_task(
+        self,
+        updating_data_task: RequestTaskSchemaCreate,
+        task_id: int,
+        user_id: int,
+    ) -> ResponseTaskSchemaCreate:
+        # TODO: the changes are applied, but an exception is thrown that does not allow the data to be returned.
         async with self.uow:
 
-            if data_for_update_task != {}:
-                await self.uow.task.edit_one(
-                   data_for_update_task, id=task_id
-                )
-            if data_for_update_notification_task != {}:
-                await NotificationTaskService(self.uow).update_notification_task(
-                    data_for_update_notification_task, task_id=task_id
-                )
-            if data_for_update_complete_task != {}:
-                await CompleteTaskService(self.uow).update_complete_task(
-                    data_for_update_complete_task, task_id=task_id
-                )
+            await self.uow.task.delete_one(id=task_id, create_by=user_id)
+
+            task_id = await self.__add_task(updating_data_task, user_id)
+            await NotificationTaskService(self.uow).add_notification_task(updating_data_task, task_id)
+            await CompleteTaskService(self.uow).add_complete_task(updating_data_task, task_id)
+
             await self.uow.commit()
+
+        new_task = await self.get_by_id(task_id)
+        return ResponseTaskSchemaCreate(
+            task=new_task.task,
+            complete=new_task.complete,
+            notification=new_task.notification,
+        )
 
     async def __add_task(self, task_create: RequestTaskSchemaCreate, user_id: int) -> int:
         data_for_task = get_data_for_task(task_create, user_id)

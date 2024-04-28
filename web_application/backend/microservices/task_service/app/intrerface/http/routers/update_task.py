@@ -5,8 +5,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.exc import NoResultFound, DatabaseError
 from starlette import status
 
-from app.domain.schemas.requests.task_update import RequestUpdatingDataTaskSchema
+from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.domain.schemas.response.error import Http404ErrorSchema, Http500ErrorSchema, Http401ErrorSchema
+from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
 from app.usecase.error.handler import Http500Error, Http404Error, Http401Error
 from app.usecase.requests.user.dependencies import ActiveUser
 from app.usecase.service.task import TaskService
@@ -15,14 +16,14 @@ logger = logging.getLogger("console_log")
 router = APIRouter()
 
 
-@router.patch(
+@router.put(
     "",
-    description="Changes the task data",
+    description="Changes the task data, recreating her",
     tags=["Task"],
-    summary="Changes the task data",
+    summary="Changes the task data, recreating her",
     responses={
-        status.HTTP_204_NO_CONTENT: {
-            "model": None,
+        status.HTTP_201_CREATED: {
+            "model": ResponseTaskSchemaCreate,
             "description": "task success changed",
         },
         status.HTTP_401_UNAUTHORIZED: {
@@ -41,7 +42,8 @@ router = APIRouter()
 )
 async def update_task(
     user: ActiveUser,
-    updating_data_task: RequestUpdatingDataTaskSchema,
+    task_id: int,
+    updating_data_task: RequestTaskSchemaCreate,
     task_service: TaskService = Depends(TaskService),
 ) -> Any:
     try:
@@ -51,7 +53,9 @@ async def update_task(
             logger.info(f"current user is not auth -> {user}")
             raise Http401Error(detail=user.detail)
 
-        await task_service.update_task(updating_data_task)
+        updated_task = await task_service.update_task(updating_data_task, task_id, user.id)
+        logger.info(f"updated task -> {updated_task}")
+        return updated_task
 
     except NoResultFound:
         logger.info(f"this task is absent -> id ={updating_data_task.task_id}")
