@@ -7,8 +7,8 @@ from pydantic import PositiveInt, constr
 
 class RequestTaskSchemaCreate(pydantic.BaseModel):
     id_template: Optional[PositiveInt] = None
-    name: constr(min_length=1, max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")
-    description: Optional[constr(max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")] = None
+    name: constr(min_length=1, max_length=255, pattern=r"[a-zA-Zа-яА-Я0-9\'\"\_\!\.\,\(\)]")
+    description: Optional[constr(max_length=255, pattern=r"[a-zA-Zа-яА-Я0-9\'\"\_\!\.\,\(\)]")] = None
 
     send_notification_at: Optional[datetime] = None
     duration_send_notification_at: Optional[time] = None
