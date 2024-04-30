@@ -1,7 +1,7 @@
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-from redis import asyncio as aioredis
+import redis
 
 from app.infra.config.config import Settings
 
@@ -26,5 +26,5 @@ SETTINGS = Settings().cache
 #         return self.__redis_conn
 
 
-redis = aioredis.from_url(f"redis://{SETTINGS.redis_host}:{SETTINGS.redis_port}")
+redis = redis.from_url(f"redis://{SETTINGS.redis_host}:{SETTINGS.redis_port}")
 FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
