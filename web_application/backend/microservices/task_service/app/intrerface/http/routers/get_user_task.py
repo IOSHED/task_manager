@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List, Any, Optional
 
 from fastapi import APIRouter, Depends, Query
+from fastapi_cache.decorator import cache
 from sqlalchemy.exc import NoResultFound, DatabaseError
 from starlette import status
 
@@ -54,6 +55,7 @@ class OrderBy(Enum):
         },
     }
 )
+@cache(expire=720)
 async def get_user_task(
     user: ActiveUser,
     order_by: OrderBy,

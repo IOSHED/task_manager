@@ -19,7 +19,6 @@ class NotificationTaskService:
         task_create: RequestTaskSchemaCreate,
         task_id: int,
     ) -> None:
-
         data_for_notification_task = get_data_for_notification_task(task_create, task_id)
         logger.debug(f"data for creating notification task -> {data_for_notification_task}")
         if data_for_notification_task is not None:

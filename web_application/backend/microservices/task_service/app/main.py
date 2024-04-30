@@ -4,6 +4,7 @@ from logging.config import dictConfig
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
+from app.infra.cache.redis import redis
 from app.infra.config.config import Settings
 from app.intrerface.http.routers.add_task import router as router_add_task
 from app.intrerface.http.routers.delete_task import router as router_delete_task
@@ -19,6 +20,9 @@ SETTINGS = Settings()
 # Init logger
 dictConfig(logging_config)
 logger = logging.getLogger("console_log")
+
+# Init redis
+_redis = redis
 
 # Init app
 app = FastAPI(

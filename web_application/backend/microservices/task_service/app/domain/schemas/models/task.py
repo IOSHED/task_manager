@@ -14,8 +14,8 @@ class TaskSchema(pydantic.BaseModel):
 
     id: PositiveInt
     id_template: Optional[PositiveInt] = None
-    name: constr(min_length=1, max_length=255, pattern=r"[a-zA-Zа-яА-Я\'\"\_\!\.\,\(\)]")
-    description: Optional[constr(max_length=255, pattern=r"[a-zA-Zа-яА-Я\'\"\_\!\.\,\(\)]")] = None
+    name: constr(min_length=1, max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")
+    description: Optional[constr(max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")] = None
     create_by: PositiveInt
     created_at: datetime = datetime.utcnow
 
@@ -44,8 +44,8 @@ class TaskSchemaCreate(pydantic.BaseModel):
     """Даные неоходимые для создания записи в базе данных"""
 
     id_template: Optional[PositiveInt] = None
-    name: constr(min_length=1, max_length=255, pattern=r"[a-zA-Zа-яА-Я\'\"\_\!\.\,\(\)]")
-    description: Optional[constr(max_length=255, pattern=r"[a-zA-Zа-яА-Я\'\"\_\!\.\,\(\)]")] = None
+    name: constr(min_length=1, max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")
+    description: Optional[constr(max_length=255, pattern=r"^[0-9a-zA-Zа-яА-ЯЁё\-\_\(\)\[\]\{\}\@\#\!\/\\\,\.\;]*$")] = None
     create_by: PositiveInt
 
 

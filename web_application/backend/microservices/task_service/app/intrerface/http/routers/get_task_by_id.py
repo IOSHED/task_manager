@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Path
 from sqlalchemy.exc import DatabaseError, NoResultFound
 from starlette import status
+from fastapi_cache.decorator import cache
 
 from app.domain.schemas.response.error import Http404ErrorSchema, Http500ErrorSchema
 from app.usecase.service.task import TaskService
@@ -34,6 +35,7 @@ router = APIRouter()
         },
     }
 )
+@cache(expire=300)
 async def get_task_by_id(
     id_task: int = Path(description="ID getting task"),
     task_service: TaskService = Depends(TaskService),

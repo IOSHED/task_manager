@@ -5,5 +5,10 @@ base:
   origins: # All hosts that can access our api
     - "http://127.0.0.1:8080"
 
+cache:
+  redis_host: "redis_task"
+  redis_port: 6379
+  expire_save_data: 3600  # Save cache on 1 hour
+
 request:
   get_current_user: "http://auth_service:8000/api/v1/auth/users/me"

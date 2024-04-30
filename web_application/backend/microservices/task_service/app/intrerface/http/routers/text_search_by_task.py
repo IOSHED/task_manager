@@ -2,6 +2,7 @@ import logging
 from typing import List, Any
 
 from fastapi import APIRouter, Path, Depends, Query
+from fastapi_cache.decorator import cache
 from sqlalchemy.exc import DatabaseError
 from starlette import status
 
@@ -37,6 +38,7 @@ router = APIRouter()
         },
     }
 )
+@cache(expire=300)
 async def text_search_by_task(
     user: ActiveUser,
     string_search: str = Path(description="the line where the task will be searched"),

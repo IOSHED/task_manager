@@ -47,6 +47,12 @@ class Request(pydantic.BaseModel):
     get_current_user: HttpUrl
 
 
+class Cache(pydantic.BaseModel):
+    redis_host: str
+    redis_port: PositiveInt
+    expire_save_data: PositiveInt
+
+
 class Settings(BaseSettings):
     """
     Корневой класс настроек проекта. Он загружает MODE из виртуального окружения и в зависимости от него подгружает
@@ -62,6 +68,7 @@ class Settings(BaseSettings):
     base: BaseApp
     database: Database
     request: Request
+    cache: Cache
 
     model_config = SettingsConfigDict(env_file='../../../.env', env_file_encoding='utf-8')
     __instance: Optional[Self] = None
