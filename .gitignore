@@ -13,5 +13,10 @@ task.txt
 /web_application/backend/microservices/task_service/.pytest_cache/
 /web_application/backend/microservices/task_service/.env
 
+/web_application/backend/microservices/task_template_service/.db_data/
+/web_application/backend/microservices/task_template_service/.redis_data/
+/web_application/backend/microservices/task_template_service/.pytest_cache/
+/web_application/backend/microservices/task_template_service/.env
+
 /web_application/backend/nginx/.env
 /web_application/backend/other_service/pgadmin/.env

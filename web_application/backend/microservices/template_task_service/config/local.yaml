@@ -1,0 +1,11 @@
+mode: "local" # local, dev
+
+database:
+  mariadb:
+    user: admin
+    password: 44541
+    root_password: 44541admin
+    db: template_task_db
+    host: mariadb_template_task
+    port: 3310
+
