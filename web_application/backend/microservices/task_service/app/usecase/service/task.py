@@ -4,6 +4,7 @@ from typing import List, Optional
 from app.domain.schemas.requests.task_create import RequestTaskSchemaCreate
 from app.domain.schemas.response.task_create import ResponseTaskSchemaCreate
 from app.domain.convector.data_for_task import get_data_for_task
+from app.usecase.service.template_task import TemplateTaskService
 from app.usecase.uow.dependencies import UOWDep
 from app.usecase.service.notification_task import NotificationTaskService
 from app.usecase.service.complete_task import CompleteTaskService
@@ -21,12 +22,21 @@ class TaskService:
     async def create(self, task_create: RequestTaskSchemaCreate, user_id: int) -> ResponseTaskSchemaCreate:
         async with self.uow:
 
+            if task_create.id_template is not None:
+                template_task = TemplateTaskService(task_create.id_template)
+                new_task_create = await template_task.fill(dict(task_create))
+                task_create = await RequestTaskSchemaCreate.model_validate(new_task_create)
+
             task_id = await self.__add_task(task_create, user_id)
-            await NotificationTaskService(self.uow).add_notification_task(task_create, task_id)
+            new_task = await self.get_by_id(task_id)
+
+            await NotificationTaskService(self.uow).add_notification_task(
+                task_create,
+                task_id,
+                {"name": new_task.task.name, "description": new_task.task.description}
+            )
             await CompleteTaskService(self.uow).add_complete_task(task_create, task_id)
             await self.uow.commit()
-
-        new_task = await self.get_by_id(task_id)
 
         return ResponseTaskSchemaCreate(
             task=new_task.task,
@@ -38,7 +48,11 @@ class TaskService:
         list_for_delete = args_query.id_for_deleting_tasks
         async with self.uow:
             for id_task in list_for_delete:
-                await self.uow.task.delete_one(id=id_task, create_by=user_id)
+                try:
+                    notification_task = await self.uow.notification_task.find_one(task_id=id_task)
+                    await NotificationTaskService(self.uow).delete(notification_task)
+                finally:
+                    await self.uow.task.delete_one(id=id_task, create_by=user_id)
             await self.uow.commit()
 
     async def get_by_id(self, id_task: int) -> ResponseTaskSchemaGet:
@@ -107,17 +121,30 @@ class TaskService:
         user_id: int,
     ) -> ResponseTaskSchemaCreate:
         # TODO: the changes are applied, but an exception is thrown that does not allow the data to be returned.
+
         async with self.uow:
+            try:
+                notification_task = await self.uow.notification_task.find_one(task_id=task_id)
+                await NotificationTaskService(self.uow).delete(notification_task)
+            finally:
+                await self.uow.task.delete_one(id=task_id, create_by=user_id)
 
-            await self.uow.task.delete_one(id=task_id, create_by=user_id)
+            if updating_data_task.id_template is not None:
+                template_task = TemplateTaskService(updating_data_task.id_template)
+                new_task_create = await template_task.fill(dict(updating_data_task))
+                task_create = await RequestTaskSchemaCreate.model_validate(new_task_create)
 
-            task_id = await self.__add_task(updating_data_task, user_id)
-            await NotificationTaskService(self.uow).add_notification_task(updating_data_task, task_id)
-            await CompleteTaskService(self.uow).add_complete_task(updating_data_task, task_id)
+            task_id = await self.__add_task(task_create, user_id)
+            new_task = await self.get_by_id(task_id)
 
+            await NotificationTaskService(self.uow).add_notification_task(
+                task_create,
+                task_id,
+                {"name": new_task.task.name, "description": new_task.task.description}
+            )
+            await CompleteTaskService(self.uow).add_complete_task(task_create, task_id)
             await self.uow.commit()
 
-        new_task = await self.get_by_id(task_id)
         return ResponseTaskSchemaCreate(
             task=new_task.task,
             complete=new_task.complete,

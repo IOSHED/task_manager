@@ -1,4 +1,9 @@
 
+# Запуск postgres:
+```postgres-sql
+CREATE EXTENSION pg_trgm;
+CREATE INDEX забыл...
+```
 
 # План по созданию MVP
 + - Создать auth_service

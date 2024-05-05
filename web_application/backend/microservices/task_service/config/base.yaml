@@ -12,3 +12,6 @@ cache:
 
 request:
   get_current_user: "http://auth_service:8000/api/v1/auth/users/me"
+  get_template: "http://template_service:8000/api/v1/template"
+  send_notification: "http://send_notification_service:800/api/v1/send_notification"
+  delete_send_notification: "http://send_notification_service:800/api/v1/send_notification"

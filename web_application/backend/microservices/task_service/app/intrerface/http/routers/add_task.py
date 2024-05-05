@@ -89,6 +89,10 @@ async def add_task(
         logger.info(f"this task not created -> {new_task.model_dump()}")
         raise Http404Error(detail="Task not created")
 
+    except Http404Error as err:
+        logger.info(f"template with this id does not exist")
+        raise Http404Error(detail=err.detail)
+
     except DatabaseError as err:
         logger.error(f"database error during create task -> {err}")
         raise Http500Error(detail="Database Error")

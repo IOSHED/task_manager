@@ -45,6 +45,9 @@ class BaseApp(pydantic.BaseModel):
 
 class Request(pydantic.BaseModel):
     get_current_user: HttpUrl
+    get_template: HttpUrl
+    send_notification: HttpUrl
+    delete_send_notification: HttpUrl
 
 
 class Cache(pydantic.BaseModel):

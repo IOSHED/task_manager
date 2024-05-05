@@ -9,6 +9,7 @@ task.txt
 /web_application/backend/microservices/auth_service/.env
 
 /web_application/backend/microservices/task_service/.db_data/
+/web_application/backend/microservices/task_service/.redis_data/
 /web_application/backend/microservices/task_service/.pytest_cache/
 /web_application/backend/microservices/task_service/.env
 
