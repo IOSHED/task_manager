@@ -8,7 +8,10 @@ base:
 cache:
   redis_host: "redis_template_task"
   redis_port: 6379
-  expire_save_data: 3600  # Default save cache on 1 hour
+  default_expire_save_data: 3600  # Default save cache on 1 hour
+  other_expire:
+    find_templates_task: 720
+    get_template_task_by_id: 300
 
 request:
   get_current_user: "http://auth_service:8000/api/v1/auth/users/me"

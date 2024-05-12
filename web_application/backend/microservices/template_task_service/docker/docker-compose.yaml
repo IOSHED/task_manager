@@ -1,19 +1,17 @@
 version: '3.7'
 
 services:
-  mariadb_template_task:
-    container_name: mariadb_template_task
-    image: mariadb:10.8
+  postgres_template_task:
+    image: postgres:12.1-alpine
+    container_name: postgres_template_task
+    restart: always
     volumes:
-      - mariadb_data_template_task:/var/lib/mysql
-      - ../.db_data:/var/lib/mysql
-    ports:
-      - "3310:3310"
+      - postgres_data_template_task:/var/lib/postgresql/data/
+      - ../.db_data:/var/lib/postgresql/
     env_file:
       - ../.env
-    restart: always
 
-  task_service:
+  template_task_service:
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -26,7 +24,8 @@ services:
     env_file:
       - ../.env
     depends_on:
-      - mariadb_template_task
+      - postgres_template_task
+      - redis_template_task
     restart: always
 
   redis_template_task:
@@ -44,5 +43,5 @@ services:
       - ../.env
 
 volumes:
-  mariadb_data_template_task:
   redis_data_template_task:
+  postgres_data_template_task:
